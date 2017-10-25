@@ -7,10 +7,10 @@ public class MyMaze {
     private int dimensionX, dimensionY; // dimension of maze
     private int gridDimensionX, gridDimensionY; // dimension of output grid
     private char[][] grid; // output grid
-    private Cell[][] cells; // 2d array of Cells
+    public Cell[][] cells; // 2d array of Cells
     private Random random = new Random(); // The random object
 
-    // initialize with x and y the same
+    // initialize with x and y the same 
     public MyMaze(int aDimension) {
         // Initialize
         this(aDimension, aDimension);
@@ -157,6 +157,13 @@ public class MyMaze {
         }
     }
 
+    // get the projected distance
+    // (A star algorithm consistent)
+    public double getProjectedDistance(Cell current, double travelled, Cell end) {
+        return travelled + Math.abs(current.x - end.x) +
+                Math.abs(current.y - current.x);
+    }
+
     // draw the maze
     public void updateGrid() {
         char backChar = ' ', wallChar = 'X', cellChar = ' ', pathChar = '*';
@@ -239,6 +246,5 @@ public class MyMaze {
     public static void main(String[] args) {
         MyMaze maze = new MyMaze(20);
         maze.draw();
-        //new Screen(200*16);
     }
 }
