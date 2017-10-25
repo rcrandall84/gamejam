@@ -157,78 +157,6 @@ public class MyMaze {
         }
     }
 
-    public void solve() {
-        // default solve top left to bottom right
-        this.solve(0, 0, dimensionX - 1, dimensionY -1);
-    }
-    // solve the maze starting from the start state (A-star algorithm)
-    public void solve(int startX, int startY, int endX, int endY) {
-        // re initialize cells for path finding
-        for (Cell[] cellrow : this.cells) {
-            for (Cell cell : cellrow) {
-                cell.parent = null;
-                cell.visited = false;
-                cell.inPath = false;
-                cell.travelled = 0;
-                cell.projectedDist = -1;
-            }
-        }
-        // cells still being considered
-        ArrayList<Cell> openCells = new ArrayList<>();
-        // cell being considered
-        Cell endCell = getCell(endX, endY);
-        if (endCell == null) return; // quit if end out of bounds
-        { // anonymous block to delete start, because not used later
-            Cell start = getCell(startX, startY);
-            if (start == null) return; // quit if start out of bounds
-            start.projectedDist = getProjectedDistance(start, 0, endCell);
-            start.visited = true;
-            openCells.add(start);
-        }
-        boolean solving = true;
-        while (solving) {
-            if (openCells.isEmpty()) return; // quit, no path
-            // sort openCells according to least projected distance
-            Collections.sort(openCells, new Comparator<Cell>(){
-                @Override
-                public int compare(Cell cell1, Cell cell2) {
-                    double diff = cell1.projectedDist - cell2.projectedDist;
-                    if (diff > 0) return 1;
-                    else if (diff < 0) return -1;
-                    else return 0;
-                }
-            });
-            Cell current = openCells.remove(0); // pop cell least projectedDist
-            if (current == endCell) break; // at end
-            for (Cell neighbor : current.neighbors) {
-                double projDist = getProjectedDistance(neighbor,
-                        current.travelled + 1, endCell);
-                if (!neighbor.visited || // not visited yet
-                        projDist < neighbor.projectedDist) { // better path
-                    neighbor.parent = current;
-                    neighbor.visited = true;
-                    neighbor.projectedDist = projDist;
-                    neighbor.travelled = current.travelled + 1;
-                    if (!openCells.contains(neighbor))
-                        openCells.add(neighbor);
-                }
-            }
-        }
-        // create path from end to beginning
-        Cell backtracking = endCell;
-        backtracking.inPath = true;
-        while (backtracking.parent != null) {
-            backtracking = backtracking.parent;
-            backtracking.inPath = true;
-        }
-    }
-    // get the projected distance
-    // (A star algorithm consistent)
-    public double getProjectedDistance(Cell current, double travelled, Cell end) {
-        return travelled + Math.abs(current.x - end.x) +
-                Math.abs(current.y - current.x);
-    }
-
     // draw the maze
     public void updateGrid() {
         char backChar = ' ', wallChar = 'X', cellChar = ' ', pathChar = '*';
@@ -309,8 +237,8 @@ public class MyMaze {
 
     // run it
     public static void main(String[] args) {
-        MyMaze maze = new MyMaze(20);
-        maze.solve();
+        MyMaze maze = new MyMaze(2000);
         maze.draw();
+        //new Screen(200*16);
     }
 }
