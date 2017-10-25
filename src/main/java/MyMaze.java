@@ -309,7 +309,7 @@ public class MyMaze {
 
     // run it
     public static void main(String[] args) {
-        MyMaze maze = new MyMaze(20);
+        MyMaze maze = new MyMaze(200);
         maze.solve();
         maze.draw();
     }
