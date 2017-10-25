@@ -10,7 +10,7 @@ public class MyMaze {
     public Cell[][] cells; // 2d array of Cells
     private Random random = new Random(); // The random object
 
-    // initialize with x and y the same
+    // initialize with x and y the same 
     public MyMaze(int aDimension) {
         // Initialize
         this(aDimension, aDimension);
