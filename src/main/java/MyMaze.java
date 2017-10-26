@@ -1,9 +1,13 @@
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Random;
 
-public class MyMaze {
+public class MyMaze extends JPanel {
     private int dimensionX, dimensionY; // dimension of maze
     private int gridDimensionX, gridDimensionY; // dimension of output grid
     private char[][] grid; // output grid
@@ -160,8 +164,22 @@ public class MyMaze {
     }
 
     // simply prints the map
-    public void draw() {
-        System.out.print(this);
+    public void paint(Graphics g) {
+        updateGrid();
+        BufferedImage wall=null, floor=null;
+        try{
+            wall = ImageIO.read(new File(getClass().getClassLoader().getResource("wall.png").getFile()));
+            floor = ImageIO.read(new File(getClass().getClassLoader().getResource("floor.png").getFile()));
+        }catch(IOException e){}
+        for (int y = 0; y < gridDimensionY; y++) {
+            for (int x = 0; x < gridDimensionX; x++) {
+                if(grid[x][y] == 'X'){
+                    g.drawImage(wall,x*20,y*20,wall.getWidth()/10,wall.getHeight()/10,null);
+                }else{
+                    g.drawImage(floor,x*20,y*20,wall.getWidth()/10,wall.getHeight()/10,null);
+                }
+            }
+        }
     }
     // forms a meaningful representation
     @Override
@@ -179,7 +197,15 @@ public class MyMaze {
 
     // run it
     public static void main(String[] args) {
-        MyMaze maze = new MyMaze(20);
-        maze.draw();
+        MyMaze maze = new MyMaze(5);
+        JFrame frame = new JFrame();
+        frame.setTitle("Maze");
+        maze.setPreferredSize(new Dimension((5*4+1)*20,(5*2+1)*20));
+        frame.add(maze);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+        System.out.print(maze);
     }
 }
