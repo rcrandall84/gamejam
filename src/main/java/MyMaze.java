@@ -130,6 +130,15 @@ public class MyMaze extends JPanel {
     // simply prints the map
     public void paint(Graphics g) {
         updateGrid();
+        drawMaze(g);
+        drawObject(g);
+    }
+
+    private void drawObject(Graphics g) {
+        g.fillRect(21,21,18,18);
+    }
+
+    private void drawMaze(Graphics g) {
         BufferedImage wall=null, floor=null;
         try{
             assert false;
@@ -149,6 +158,7 @@ public class MyMaze extends JPanel {
             }
         }
     }
+
     // forms a meaningful representation
     @Override
     public String toString() {
@@ -165,10 +175,13 @@ public class MyMaze extends JPanel {
 
     // run it
     public static void main(String[] args) {
-        MyMaze maze = new MyMaze(25);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        final int mazeWidth = (int)screenSize.getWidth()/20 - 1;
+        final int mazeHeight = (int)screenSize.getHeight()/20 - 1;
+        MyMaze maze = new MyMaze(mazeWidth/2,mazeHeight/2);
         JFrame frame = new JFrame();
         frame.setTitle("Maze");
-        maze.setPreferredSize(new Dimension((25*2+1)*20,(25*2+1)*20));
+        maze.setPreferredSize(new Dimension(mazeWidth*20,mazeHeight*20));
         frame.add(maze);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
