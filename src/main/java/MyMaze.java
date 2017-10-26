@@ -14,12 +14,13 @@ public class MyMaze extends JPanel {
     private Cell[][] cells; // 2d array of Cells
     private Random random = new Random(); // The random object
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private int cellSize = 20;
+    private int cellSize = 32;
     private int mazeWidth = (int)screenSize.getWidth()/cellSize - 1;
     private int mazeHeight = (int)screenSize.getHeight()/cellSize - 1;
 
+
     private MyMaze(){
-        new MyMaze(mazeWidth >> 1, mazeHeight >> 1);
+        new MyMaze(cellSize/2, cellSize/2);
     }
     // constructor
     private MyMaze(int xDimension, int yDimension) {
@@ -37,7 +38,7 @@ public class MyMaze extends JPanel {
     private void buildFrame() {
         JFrame frame = new JFrame();
         frame.setTitle("Maze");
-        this.setPreferredSize(new Dimension(mazeWidth*cellSize,mazeHeight*cellSize));
+        this.setPreferredSize(screenSize);
         frame.add(this);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -150,7 +151,7 @@ public class MyMaze extends JPanel {
     }
 
     private void drawObject(Graphics g) {
-        g.fillRect(cellSize+1,cellSize+1,cellSize-2,cellSize-2);
+        g.fillRect(mazeWidth+1,mazeHeight+1,mazeWidth-2,mazeHeight-2);
     }
 
     private void drawMaze(Graphics g) {
@@ -165,12 +166,11 @@ public class MyMaze extends JPanel {
             for (int x = 0; x < gridDimensionX; x++) {
                 if(grid[x][y] == 'X'){
                     assert wall != null;
-                    g.drawImage(wall,x*cellSize,y*cellSize,wall.getWidth()/(wall.getWidth()/cellSize),wall.getHeight()/(wall.getHeight()/cellSize),null);
-                    System.out.println(wall.getWidth()/(wall.getWidth()/cellSize));
+                    g.drawImage(wall,x*mazeWidth,y*mazeHeight,mazeWidth,mazeHeight,null);
                 }else{
                     assert floor != null;
                     //picWidth/x = cellSize 200/x = 20 200/20 = 10
-                    g.drawImage(floor,x*cellSize,y*cellSize,floor.getWidth()/(floor.getWidth()/cellSize),floor.getHeight()/(floor.getHeight()/cellSize),null);
+                    g.drawImage(floor,x*mazeWidth,y*mazeHeight,mazeWidth,mazeHeight,null);
                 }
             }
         }
