@@ -11,19 +11,19 @@ public class MyMaze extends JPanel {
     private int dimensionX, dimensionY; // dimension of maze
     private int gridDimensionX, gridDimensionY; // dimension of output grid
     private char[][] grid; // output grid
-    public Cell[][] cells; // 2d array of Cells
+    private Cell[][] cells; // 2d array of Cells
     private Random random = new Random(); // The random object
 
     // initialize with x and y the same 
-    public MyMaze(int aDimension) {
+    private MyMaze(int aDimension) {
         // Initialize
         this(aDimension, aDimension);
     }
     // constructor
-    public MyMaze(int xDimension, int yDimension) {
+    private MyMaze(int xDimension, int yDimension) {
         dimensionX = xDimension;
         dimensionY = yDimension;
-        gridDimensionX = xDimension * 4 + 1;
+        gridDimensionX = xDimension * 2 + 1;
         gridDimensionY = yDimension * 2 + 1;
         grid = new char[gridDimensionX][gridDimensionY];
         init();
@@ -40,13 +40,9 @@ public class MyMaze extends JPanel {
         }
     }
 
-    // generate from upper left (In computing the y increases down often)
-    private void generateMaze() {
-        generateMaze(0, 0);
-    }
     // generate the maze from coordinates x, y
-    private void generateMaze(int x, int y) {
-        generateMaze(getCell(x, y)); // generate from Cell
+    private void generateMaze() {
+        generateMaze(getCell(0, 0)); // generate from Cell
     }
     private void generateMaze(Cell startAt) {
         // don't generate from cell not there
@@ -62,7 +58,7 @@ public class MyMaze extends JPanel {
             //   which results in easy mazes
             if (random.nextInt(10)==0)
                 cell = cells.remove(random.nextInt(cells.size()));
-            else cell = cells.remove(cells.size() - 1);
+             else cell = cells.remove(cells.size() - 1);
             // for collection
             ArrayList<Cell> neighbors = new ArrayList<>();
             // cells that could potentially be neighbors
@@ -88,7 +84,7 @@ public class MyMaze extends JPanel {
         }
     }
     // used to get a Cell at x, y; returns null out of bounds
-    public Cell getCell(int x, int y) {
+    private Cell getCell(int x, int y) {
         try {
             return cells[x][y];
         } catch (ArrayIndexOutOfBoundsException e) { // catch out of bounds
@@ -96,68 +92,36 @@ public class MyMaze extends JPanel {
         }
     }
 
-    // get the projected distance
-    // (A star algorithm consistent)
-    public double getProjectedDistance(Cell current, double travelled, Cell end) {
-        return travelled + Math.abs(current.x - end.x) +
-                Math.abs(current.y - current.x);
-    }
-
     // draw the maze
-    public void updateGrid() {
-        char backChar = ' ', wallChar = 'X', cellChar = ' ', pathChar = '*';
+    private void updateGrid() {
+        char wallChar = 'X', floorChar = ' ';
         // fill background
         for (int x = 0; x < gridDimensionX; x ++) {
             for (int y = 0; y < gridDimensionY; y ++) {
-                grid[x][y] = backChar;
+                grid[x][y] = floorChar;
             }
         }
         // build walls
         for (int x = 0; x < gridDimensionX; x ++) {
             for (int y = 0; y < gridDimensionY; y ++) {
-                if (x % 4 == 0 || y % 2 == 0)
+                if (x % 2 == 0 || y % 2 == 0) {
                     grid[x][y] = wallChar;
+                }
             }
         }
         // make meaningful representation
         for (int x = 0; x < dimensionX; x++) {
             for (int y = 0; y < dimensionY; y++) {
                 Cell current = getCell(x, y);
-                int gridX = x * 4 + 2, gridY = y * 2 + 1;
-                if (current.inPath) {
-                    grid[gridX][gridY] = pathChar;
-                    if (current.isCellBelowNeighbor())
-                        if (getCell(x, y + 1).inPath) {
-                            grid[gridX][gridY + 1] = pathChar;
-                            grid[gridX + 1][gridY + 1] = backChar;
-                            grid[gridX - 1][gridY + 1] = backChar;
-                        } else {
-                            grid[gridX][gridY + 1] = cellChar;
-                            grid[gridX + 1][gridY + 1] = backChar;
-                            grid[gridX - 1][gridY + 1] = backChar;
-                        }
-                    if (current.isCellRightNeighbor())
-                        if (getCell(x + 1, y).inPath) {
-                            grid[gridX + 2][gridY] = pathChar;
-                            grid[gridX + 1][gridY] = pathChar;
-                            grid[gridX + 3][gridY] = pathChar;
-                        } else {
-                            grid[gridX + 2][gridY] = cellChar;
-                            grid[gridX + 1][gridY] = cellChar;
-                            grid[gridX + 3][gridY] = cellChar;
-                        }
-                } else {
-                    grid[gridX][gridY] = cellChar;
-                    if (current.isCellBelowNeighbor()) {
-                        grid[gridX][gridY + 1] = cellChar;
-                        grid[gridX + 1][gridY + 1] = backChar;
-                        grid[gridX - 1][gridY + 1] = backChar;
-                    }
-                    if (current.isCellRightNeighbor()) {
-                        grid[gridX + 2][gridY] = cellChar;
-                        grid[gridX + 1][gridY] = cellChar;
-                        grid[gridX + 3][gridY] = cellChar;
-                    }
+                int gridX = x * 2 + 1, gridY = y * 2 + 1;
+                grid[gridX][gridY] = floorChar;
+                assert current != null;
+                if (current.isCellBelowNeighbor()) {
+                    grid[gridX][gridY + 1] = floorChar;
+                }
+                if (current.isCellRightNeighbor()) {
+                    grid[gridX + 2][gridY] = floorChar;
+                    grid[gridX + 1][gridY] = floorChar;
                 }
             }
         }
@@ -168,15 +132,19 @@ public class MyMaze extends JPanel {
         updateGrid();
         BufferedImage wall=null, floor=null;
         try{
+            assert false;
             wall = ImageIO.read(new File(getClass().getClassLoader().getResource("wall.png").getFile()));
+            assert floor !=null;
             floor = ImageIO.read(new File(getClass().getClassLoader().getResource("floor.png").getFile()));
-        }catch(IOException e){}
+        }catch(IOException e){e.printStackTrace();}
         for (int y = 0; y < gridDimensionY; y++) {
             for (int x = 0; x < gridDimensionX; x++) {
                 if(grid[x][y] == 'X'){
+                    assert wall != null;
                     g.drawImage(wall,x*20,y*20,wall.getWidth()/10,wall.getHeight()/10,null);
                 }else{
-                    g.drawImage(floor,x*20,y*20,wall.getWidth()/10,wall.getHeight()/10,null);
+                    assert floor != null;
+                    g.drawImage(floor,x*20,y*20,floor.getWidth()/10,floor.getHeight()/10,null);
                 }
             }
         }
@@ -185,22 +153,22 @@ public class MyMaze extends JPanel {
     @Override
     public String toString() {
         updateGrid();
-        String output = "";
+        StringBuilder output = new StringBuilder();
         for (int y = 0; y < gridDimensionY; y++) {
             for (int x = 0; x < gridDimensionX; x++) {
-                output += grid[x][y];
+                output.append(grid[x][y]);
             }
-            output += "\n";
+            output.append("\n");
         }
-        return output;
+        return output.toString();
     }
 
     // run it
     public static void main(String[] args) {
-        MyMaze maze = new MyMaze(5);
+        MyMaze maze = new MyMaze(25);
         JFrame frame = new JFrame();
         frame.setTitle("Maze");
-        maze.setPreferredSize(new Dimension((5*4+1)*20,(5*2+1)*20));
+        maze.setPreferredSize(new Dimension((25*2+1)*20,(25*2+1)*20));
         frame.add(maze);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
