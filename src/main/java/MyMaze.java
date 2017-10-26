@@ -13,11 +13,13 @@ public class MyMaze extends JPanel {
     private char[][] grid; // output grid
     private Cell[][] cells; // 2d array of Cells
     private Random random = new Random(); // The random object
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private int cellSize = 20;
+    private int mazeWidth = (int)screenSize.getWidth()/cellSize - 1;
+    private int mazeHeight = (int)screenSize.getHeight()/cellSize - 1;
 
-    // initialize with x and y the same 
-    private MyMaze(int aDimension) {
-        // Initialize
-        this(aDimension, aDimension);
+    private MyMaze(){
+        new MyMaze(mazeWidth >> 1, mazeHeight >> 1);
     }
     // constructor
     private MyMaze(int xDimension, int yDimension) {
@@ -28,6 +30,19 @@ public class MyMaze extends JPanel {
         grid = new char[gridDimensionX][gridDimensionY];
         init();
         generateMaze();
+        buildFrame();
+        System.out.println(this);
+    }
+
+    private void buildFrame() {
+        JFrame frame = new JFrame();
+        frame.setTitle("Maze");
+        this.setPreferredSize(new Dimension(mazeWidth*cellSize,mazeHeight*cellSize));
+        frame.add(this);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
     }
 
     private void init() {
@@ -135,7 +150,7 @@ public class MyMaze extends JPanel {
     }
 
     private void drawObject(Graphics g) {
-        g.fillRect(21,21,18,18);
+        g.fillRect(cellSize+1,cellSize+1,cellSize-2,cellSize-2);
     }
 
     private void drawMaze(Graphics g) {
@@ -150,10 +165,12 @@ public class MyMaze extends JPanel {
             for (int x = 0; x < gridDimensionX; x++) {
                 if(grid[x][y] == 'X'){
                     assert wall != null;
-                    g.drawImage(wall,x*20,y*20,wall.getWidth()/10,wall.getHeight()/10,null);
+                    g.drawImage(wall,x*cellSize,y*cellSize,wall.getWidth()/(wall.getWidth()/cellSize),wall.getHeight()/(wall.getHeight()/cellSize),null);
+                    System.out.println(wall.getWidth()/(wall.getWidth()/cellSize));
                 }else{
                     assert floor != null;
-                    g.drawImage(floor,x*20,y*20,floor.getWidth()/10,floor.getHeight()/10,null);
+                    //picWidth/x = cellSize 200/x = 20 200/20 = 10
+                    g.drawImage(floor,x*cellSize,y*cellSize,floor.getWidth()/(floor.getWidth()/cellSize),floor.getHeight()/(floor.getHeight()/cellSize),null);
                 }
             }
         }
@@ -175,18 +192,7 @@ public class MyMaze extends JPanel {
 
     // run it
     public static void main(String[] args) {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        final int mazeWidth = (int)screenSize.getWidth()/20 - 1;
-        final int mazeHeight = (int)screenSize.getHeight()/20 - 1;
-        MyMaze maze = new MyMaze(mazeWidth/2,mazeHeight/2);
-        JFrame frame = new JFrame();
-        frame.setTitle("Maze");
-        maze.setPreferredSize(new Dimension(mazeWidth*20,mazeHeight*20));
-        frame.add(maze);
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-        System.out.print(maze);
+        new MyMaze();
+        //System.out.print(maze);
     }
 }
