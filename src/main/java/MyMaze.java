@@ -14,9 +14,10 @@ public class MyMaze extends JPanel {
     private Cell[][] cells; // 2d array of Cells
     private Random random = new Random(); // The random object
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private int cellSize = 100;
+    private int cellSize = 50;
     private int mazeWidth = (int)screenSize.getWidth()/cellSize - 1;
     private int mazeHeight = (int)screenSize.getHeight()/cellSize - 1;
+    private BufferedImage wall=null, floor=null, knight = null;
 
 
     private MyMaze(){
@@ -31,8 +32,18 @@ public class MyMaze extends JPanel {
         grid = new char[gridDimensionX][gridDimensionY];
         init();
         generateMaze();
+        loadImages();
         buildFrame();
         System.out.println(this);
+    }
+
+    private void loadImages() {
+        try{
+        assert false;
+        wall = ImageIO.read(new File(getClass().getClassLoader().getResource("wall.png").getFile()));
+        floor = ImageIO.read(new File(getClass().getClassLoader().getResource("floor.png").getFile()));
+        knight = ImageIO.read(new File(getClass().getClassLoader().getResource("knight2.png").getFile()));
+    }catch(IOException e){e.printStackTrace();}
     }
 
     private void buildFrame() {
@@ -152,17 +163,12 @@ public class MyMaze extends JPanel {
     }
 
     private void drawObject(Graphics g) {
-        g.fillRect(cellSize+1,cellSize+1,cellSize-2,cellSize-2);
+            g.drawImage(knight, cellSize+1,cellSize+1,cellSize-2,cellSize-2,null);
     }
 
     private void drawMaze(Graphics g) {
-        BufferedImage wall=null, floor=null;
-        try{
-            assert false;
-            wall = ImageIO.read(new File(getClass().getClassLoader().getResource("wall.png").getFile()));
-            assert floor !=null;
-            floor = ImageIO.read(new File(getClass().getClassLoader().getResource("floor.png").getFile()));
-        }catch(IOException e){e.printStackTrace();}
+
+
         for (int y = 0; y < gridDimensionY; y++) {
             for (int x = 0; x < gridDimensionX; x++) {
                 if(grid[x][y] == 'X'){
