@@ -20,10 +20,10 @@ public class MyMaze extends JPanel implements KeyListener{
     private int playerPosY = cellSize+1;
     private BufferedImage wall=null, floor=null, knight = null;
     private JFrame frame;
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 
     private MyMaze(){
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int mazeWidth = (int) screenSize.getWidth()/cellSize - 1;
         int mazeHeight = (int) screenSize.getHeight()/cellSize - 1;
         new MyMaze(mazeWidth/2, mazeHeight/2);
@@ -53,15 +53,13 @@ public class MyMaze extends JPanel implements KeyListener{
         frame = new JFrame();
         frame.setTitle("Maze");
         frame.setAlwaysOnTop(true);
-        this.setPreferredSize(new Dimension(gridDimensionX*cellSize,gridDimensionY*cellSize));
+        this.setPreferredSize(screenSize);//new Dimension(gridDimensionX*cellSize,gridDimensionY*cellSize));
         frame.addKeyListener(this);
+        frame.setUndecorated(true);
         frame.add(this);
         frame.setResizable(false);
-        frame.setUndecorated(true);
-        frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
-        frame.toFront();
         frame.setVisible(true);
     }
 
