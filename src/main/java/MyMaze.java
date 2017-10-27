@@ -12,22 +12,22 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MyMaze extends JPanel implements KeyListener{
+    private int cellSize = 250;
     private int dimensionX, dimensionY; // dimension of maze
     private int gridDimensionX, gridDimensionY; // dimension of output grid
     private char[][] grid; // output grid
     private Cell[][] cells; // 2d array of Cells
     private Random random = new Random(); // The random object
-    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private int cellSize = 180;
     private int playerPosX = cellSize+1;
     private int playerPosY = cellSize+1;
-    private int mazeWidth = (int)screenSize.getWidth()/cellSize - 1;
-    private int mazeHeight = (int)screenSize.getHeight()/cellSize - 1;
     private BufferedImage wall=null, floor=null, knight = null;
     private JFrame frame;
 
 
     private MyMaze(){
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int mazeWidth = (int) screenSize.getWidth()/cellSize - 1;
+        int mazeHeight = (int) screenSize.getHeight()/cellSize - 1;
         new MyMaze(mazeWidth/2, mazeHeight/2);
     }
     private MyMaze(int xDimension, int yDimension) {
@@ -40,7 +40,6 @@ public class MyMaze extends JPanel implements KeyListener{
         generateMaze();
         loadImages();
         buildFrame();
-        System.out.println(this);
     }
 
     private void loadImages() {
@@ -55,7 +54,6 @@ public class MyMaze extends JPanel implements KeyListener{
     private void buildFrame() {
         frame = new JFrame();
         frame.setTitle("Maze");
-        System.out.printf("%d, %d%n",gridDimensionX,gridDimensionY);
         this.setPreferredSize(new Dimension(gridDimensionX*cellSize,gridDimensionY*cellSize));
         frame.addKeyListener(this);
         frame.add(this);
@@ -144,7 +142,6 @@ public class MyMaze extends JPanel implements KeyListener{
                 }
             }
         }
-        // make meaningful representation
         for (int x = 0; x < dimensionX; x++) {
             for (int y = 0; y < dimensionY; y++) {
                 Cell current = getCell(x, y);
@@ -209,13 +206,11 @@ public class MyMaze extends JPanel implements KeyListener{
     }
 
     @Override
-    public void keyTyped(KeyEvent keyEvent) {
-
-    }
+    public void keyTyped(KeyEvent keyEvent) {}
 
     @Override
     public void keyPressed(KeyEvent keyEvent){
-        switch( keyEvent.getKeyCode() ) {
+        switch(keyEvent.getKeyCode()) {
             case KeyEvent.VK_UP:
                 if(grid[playerPosX/cellSize][(playerPosY-cellSize)/cellSize] == 'X'){
                     break;
@@ -240,19 +235,13 @@ public class MyMaze extends JPanel implements KeyListener{
                 }
                 playerPosX += cellSize;
                 break;
-        }
-        System.out.printf("%d, %d%n",mazeWidth,mazeHeight);
-        System.out.printf("(%d, %d) (%d, %d)%n", playerPosX/cellSize, playerPosY/cellSize, mazeWidth-1, mazeHeight-1);
-        if(playerPosX/cellSize == mazeWidth-1 && playerPosY/cellSize == mazeHeight-1) {
+        }if(playerPosX/cellSize == gridDimensionX-2 && playerPosY/cellSize == gridDimensionY-2) {
             frame.dispose();
-            cellSize -= 30;
             new MyMaze();
         }
         repaint();
     }
 
     @Override
-    public void keyReleased(KeyEvent keyEvent) {
-
-    }
+    public void keyReleased(KeyEvent keyEvent) {}
 }
