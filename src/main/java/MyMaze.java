@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MyMaze extends JPanel implements KeyListener{
-    private int cellSize = 250;
+    private int cellSize = 50;
     private int dimensionX, dimensionY; // dimension of maze
     private int gridDimensionX, gridDimensionY; // dimension of output grid
     private char[][] grid; // output grid
@@ -155,6 +155,7 @@ public class MyMaze extends JPanel implements KeyListener{
                 }
             }
         }
+        grid[gridDimensionX-1][gridDimensionY-2] = floorChar;
     }
 
     // simply prints the map
@@ -169,8 +170,6 @@ public class MyMaze extends JPanel implements KeyListener{
     }
 
     private void drawMaze(Graphics g) {
-
-
         for (int y = 0; y < gridDimensionY; y++) {
             for (int x = 0; x < gridDimensionX; x++) {
                 if(grid[x][y] == 'X'){
@@ -182,6 +181,7 @@ public class MyMaze extends JPanel implements KeyListener{
                 }
             }
         }
+        g.drawImage(floor,0,1*cellSize,cellSize,cellSize,null);
     }
 
     // forms a meaningful representation
@@ -208,6 +208,7 @@ public class MyMaze extends JPanel implements KeyListener{
 
     @Override
     public void keyPressed(KeyEvent keyEvent){
+        try{
         switch(keyEvent.getKeyCode()) {
             case KeyEvent.VK_UP:
                 if(grid[playerPosX/cellSize][(playerPosY-cellSize)/cellSize] == 'X'){
@@ -227,13 +228,14 @@ public class MyMaze extends JPanel implements KeyListener{
                 }
                 playerPosX -= cellSize;
                 break;
-            case KeyEvent.VK_RIGHT :
-                if(grid[(playerPosX+cellSize)/cellSize][playerPosY/cellSize] == 'X'){
+                case KeyEvent.VK_RIGHT :
+                    if(grid[(playerPosX+cellSize)/cellSize][playerPosY/cellSize] == 'X'){
                     break;
-                }
-                playerPosX += cellSize;
-                break;
-        }if(playerPosX/cellSize == gridDimensionX-2 && playerPosY/cellSize == gridDimensionY-2) {
+                    }
+                    playerPosX += cellSize;
+                    break;
+            }
+        }catch(ArrayIndexOutOfBoundsException ex){
             frame.dispose();
             new MyMaze();
         }
