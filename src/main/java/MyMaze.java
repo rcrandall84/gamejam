@@ -54,7 +54,7 @@ public class MyMaze extends JPanel implements KeyListener{
         frame.setAlwaysOnTop(true);
         frame.addKeyListener(this);
         frame.setUndecorated(true);
-        frame.setBackground(new Color(76,57,34));
+        frame.setBackground(new Color(175, 173, 161));
         frame.add(this);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
