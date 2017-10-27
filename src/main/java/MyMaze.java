@@ -61,6 +61,7 @@ public class MyMaze extends JPanel implements KeyListener{
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
+        frame.toFront();
         frame.setVisible(true);
     }
 
