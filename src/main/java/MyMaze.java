@@ -56,6 +56,9 @@ public class MyMaze extends JPanel implements KeyListener{
         frame.addKeyListener(this);
         frame.add(this);
         frame.setResizable(false);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true);
+        frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
@@ -181,7 +184,7 @@ public class MyMaze extends JPanel implements KeyListener{
                 }
             }
         }
-        g.drawImage(floor,0,1*cellSize,cellSize,cellSize,null);
+        g.drawImage(floor,0,cellSize,cellSize,cellSize,null);
     }
 
     // forms a meaningful representation
@@ -234,6 +237,8 @@ public class MyMaze extends JPanel implements KeyListener{
                     }
                     playerPosX += cellSize;
                     break;
+            case KeyEvent.VK_ESCAPE:
+                System.exit(1);
             }
         }catch(ArrayIndexOutOfBoundsException ex){
             frame.dispose();
