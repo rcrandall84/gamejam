@@ -52,11 +52,11 @@ public class MyMaze extends JPanel implements KeyListener{
     private void buildFrame() {
         frame = new JFrame();
         frame.setTitle("Maze");
+        frame.setState(JFrame.MAXIMIZED_BOTH);
         this.setPreferredSize(new Dimension(gridDimensionX*cellSize,gridDimensionY*cellSize));
         frame.addKeyListener(this);
         frame.add(this);
         frame.setResizable(false);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setUndecorated(true);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
