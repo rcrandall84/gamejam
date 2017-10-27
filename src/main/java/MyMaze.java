@@ -18,12 +18,13 @@ public class MyMaze extends JPanel implements KeyListener{
     private Cell[][] cells; // 2d array of Cells
     private Random random = new Random(); // The random object
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private int cellSize = 25;
+    private int cellSize = 180;
     private int playerPosX = cellSize+1;
     private int playerPosY = cellSize+1;
     private int mazeWidth = (int)screenSize.getWidth()/cellSize - 1;
     private int mazeHeight = (int)screenSize.getHeight()/cellSize - 1;
     private BufferedImage wall=null, floor=null, knight = null;
+    private JFrame frame;
 
 
     private MyMaze(){
@@ -52,7 +53,7 @@ public class MyMaze extends JPanel implements KeyListener{
     }
 
     private void buildFrame() {
-        JFrame frame = new JFrame();
+        frame = new JFrame();
         frame.setTitle("Maze");
         System.out.printf("%d, %d%n",gridDimensionX,gridDimensionY);
         this.setPreferredSize(new Dimension(gridDimensionX*cellSize,gridDimensionY*cellSize));
@@ -240,8 +241,13 @@ public class MyMaze extends JPanel implements KeyListener{
                 playerPosX += cellSize;
                 break;
         }
-        System.out.printf("(%d, %d) (%d, %d)%n", playerPosX/cellSize, playerPosY/cellSize, mazeWidth, mazeHeight);
-        if(playerPosX/cellSize == mazeWidth-1 && playerPosY/cellSize == mazeHeight-1) System.exit(1);
+        System.out.printf("%d, %d%n",mazeWidth,mazeHeight);
+        System.out.printf("(%d, %d) (%d, %d)%n", playerPosX/cellSize, playerPosY/cellSize, mazeWidth-1, mazeHeight-1);
+        if(playerPosX/cellSize == mazeWidth-1 && playerPosY/cellSize == mazeHeight-1) {
+            frame.dispose();
+            cellSize -= 30;
+            new MyMaze();
+        }
         repaint();
     }
 
