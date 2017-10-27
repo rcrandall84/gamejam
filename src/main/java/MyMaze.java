@@ -45,17 +45,16 @@ public class MyMaze extends JPanel implements KeyListener{
         assert false;
         wall = ImageIO.read(new File(getClass().getClassLoader().getResource("wall.png").getFile()));
         floor = ImageIO.read(new File(getClass().getClassLoader().getResource("floor.png").getFile()));
-        knight = ImageIO.read(new File(getClass().getClassLoader().getResource("knight2.png").getFile()));
+        knight = ImageIO.read(new File(getClass().getClassLoader().getResource("knight.png").getFile()));
     }catch(IOException e){e.printStackTrace();}
     }
 
     private void buildFrame() {
         frame = new JFrame();
-        frame.setTitle("Maze");
         frame.setAlwaysOnTop(true);
-        this.setPreferredSize(screenSize);//new Dimension(gridDimensionX*cellSize,gridDimensionY*cellSize));
         frame.addKeyListener(this);
         frame.setUndecorated(true);
+        frame.setBackground(new Color(76,57,34));
         frame.add(this);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,6 +70,7 @@ public class MyMaze extends JPanel implements KeyListener{
                 cells[x][y] = new Cell(x, y, false); // create cell (see Cell constructor)
             }
         }
+        this.setPreferredSize(screenSize);
     }
 
     // generate the maze from coordinates x, y
