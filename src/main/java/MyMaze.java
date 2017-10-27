@@ -1,20 +1,26 @@
+import javafx.scene.input.KeyCode;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MyMaze extends JPanel {
+public class MyMaze extends JPanel implements KeyListener{
     private int dimensionX, dimensionY; // dimension of maze
     private int gridDimensionX, gridDimensionY; // dimension of output grid
     private char[][] grid; // output grid
     private Cell[][] cells; // 2d array of Cells
     private Random random = new Random(); // The random object
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private int cellSize = 50;
+    private int cellSize = 25;
+    private int playerPosX = cellSize+1;
+    private int playerPosY = cellSize+1;
     private int mazeWidth = (int)screenSize.getWidth()/cellSize - 1;
     private int mazeHeight = (int)screenSize.getHeight()/cellSize - 1;
     private BufferedImage wall=null, floor=null, knight = null;
@@ -23,7 +29,6 @@ public class MyMaze extends JPanel {
     private MyMaze(){
         new MyMaze(mazeWidth/2, mazeHeight/2);
     }
-    // constructor
     private MyMaze(int xDimension, int yDimension) {
         dimensionX = xDimension;
         dimensionY = yDimension;
@@ -51,6 +56,7 @@ public class MyMaze extends JPanel {
         frame.setTitle("Maze");
         System.out.printf("%d, %d%n",gridDimensionX,gridDimensionY);
         this.setPreferredSize(new Dimension(gridDimensionX*cellSize,gridDimensionY*cellSize));
+        frame.addKeyListener(this);
         frame.add(this);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -163,7 +169,7 @@ public class MyMaze extends JPanel {
     }
 
     private void drawObject(Graphics g) {
-            g.drawImage(knight, cellSize+1,cellSize+1,cellSize-2,cellSize-2,null);
+            g.drawImage(knight, playerPosX,playerPosY,cellSize-2,cellSize-2,null);
     }
 
     private void drawMaze(Graphics g) {
@@ -199,6 +205,48 @@ public class MyMaze extends JPanel {
     // run it
     public static void main(String[] args) {
         new MyMaze();
-        //System.out.print(maze);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent keyEvent) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent keyEvent){
+        switch( keyEvent.getKeyCode() ) {
+            case KeyEvent.VK_UP:
+                if(grid[playerPosX/cellSize][(playerPosY-cellSize)/cellSize] == 'X'){
+                    break;
+                }
+                playerPosY -= cellSize;
+                break;
+            case KeyEvent.VK_DOWN:
+                if(grid[playerPosX/cellSize][(playerPosY+cellSize)/cellSize] == 'X'){
+                    break;
+                }
+                playerPosY += cellSize;
+                break;
+            case KeyEvent.VK_LEFT:
+                if(grid[(playerPosX-cellSize)/cellSize][playerPosY/cellSize] == 'X'){
+                    break;
+                }
+                playerPosX -= cellSize;
+                break;
+            case KeyEvent.VK_RIGHT :
+                if(grid[(playerPosX+cellSize)/cellSize][playerPosY/cellSize] == 'X'){
+                    break;
+                }
+                playerPosX += cellSize;
+                break;
+        }
+        System.out.printf("(%d, %d) (%d, %d)%n", playerPosX/cellSize, playerPosY/cellSize, mazeWidth, mazeHeight);
+        if(playerPosX/cellSize == mazeWidth-1 && playerPosY/cellSize == mazeHeight-1) System.exit(1);
+        repaint();
+    }
+
+    @Override
+    public void keyReleased(KeyEvent keyEvent) {
+
     }
 }
