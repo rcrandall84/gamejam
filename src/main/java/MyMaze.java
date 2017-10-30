@@ -43,9 +43,9 @@ public class MyMaze extends JPanel implements KeyListener{
     private void loadImages() {
         try{
         assert false;
-        wall = ImageIO.read(new File(getClass().getClassLoader().getResource("wall.png").getFile()));
-        floor = ImageIO.read(new File(getClass().getClassLoader().getResource("floor.png").getFile()));
-        knight = ImageIO.read(new File(getClass().getClassLoader().getResource("knight.png").getFile()));
+        wall = ImageIO.read(getClass().getResource("wall.png"));
+        floor = ImageIO.read(getClass().getResource("floor.png"));
+        knight = ImageIO.read(getClass().getResource("knight.png"));
     }catch(IOException e){e.printStackTrace();}
     }
 
